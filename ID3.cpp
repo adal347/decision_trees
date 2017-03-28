@@ -44,7 +44,7 @@ double InfoGain(AttributeInnerMap Set,vector<AttributeInnerMap> SubSetV) {
 	double acum = Entropy(Set);
 
 	for(int i = 0; i < SubSetV.size();i++){
-		acum = ((double)SubSetV[i].first / Set.first) * Entropy(SubSetV[i]);
+		acum -= ((double)SubSetV[i].first / Set.first) * Entropy(SubSetV[i]);
 	}
 	return acum;
 }
