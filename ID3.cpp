@@ -15,9 +15,7 @@ using namespace std;
 
 typedef pair<int,map<string, int> > AttributeInnerMap;
 
-struct node
-{
-
+struct node{
 	struct node* parent;
 	std::vector<struct node*> childrens;
 	string name;
@@ -33,7 +31,7 @@ double Entropy(AttributeInnerMap Set){
 
 	for(std::map<string, int>::iterator ite = Set.second.begin();ite != Set.second.end(); ite++){
 		if(ite->second > 0){
-			sum -= (double) ite->second / Set.first * log((double) ite->second / Set.first);
+			sum += (double) ite->second / Set.first * log((double) ite->second / Set.first);
 		}
 	}
 	return sum;
@@ -42,7 +40,6 @@ double Entropy(AttributeInnerMap Set){
 double InfoGain(AttributeInnerMap Set,vector<AttributeInnerMap> SubSetV) {
 
 	double acum = Entropy(Set);
-
 	for(int i = 0; i < SubSetV.size();i++){
 		acum = ((double)SubSetV[i].first / Set.first) * Entropy(SubSetV[i]);
 	}
@@ -67,7 +64,7 @@ bool DoNeedSplit(vector<string> index, map<string, vector<string> > dictionary, 
 
 	if(Entropy(Set) != 0.0) {
 		return true;
-	} else {
+	}else{
 		return false;
 	}
 }
@@ -170,7 +167,6 @@ void Splitting(struct node* Node,vector<string> index, map<string, vector<string
 
 
 class TreeID3 {
-
 	private:
 		struct node* root;
 		vector<string> samplesT;
@@ -179,9 +175,7 @@ class TreeID3 {
 		string action;
 		vector<string> action_values;
 		vector<vector<string> > Samples;
-
 	public:
-
 		TreeID3(vector<string> samples, vector<string> index_attribute, map<string,vector<string> > dictionary_map): samplesT(samples), index(index_attribute), dictionary(dictionary_map) {
 			root = new node;
 			root->parent = NULL;
