@@ -15,7 +15,7 @@ using namespace std;
 
 typedef pair<int,map<string, int> > AttributeInnerMap;
 
-struct node{
+struct node {
 	struct node* parent;
 	std::vector<struct node*> childrens;
 	string name;
@@ -25,13 +25,13 @@ struct node{
 
 };
 
-double Entropy(AttributeInnerMap Set){
+double Entropy(AttributeInnerMap Set) {
 
 	double sum = 0.0;
 
-	for(std::map<string, int>::iterator ite = Set.second.begin();ite != Set.second.end(); ite++){
-		if(ite->second > 0){
-			sum += (double) ite->second / Set.first * log((double) ite->second / Set.first);
+	for (std::map<string, int>::iterator ite = Set.second.begin();ite != Set.second.end(); ite++) {
+		if (ite->second > 0) {
+			sum -= (double) ite->second / Set.first * log((double) ite->second / Set.first);
 		}
 	}
 	return sum;
@@ -40,7 +40,8 @@ double Entropy(AttributeInnerMap Set){
 double InfoGain(AttributeInnerMap Set,vector<AttributeInnerMap> SubSetV) {
 
 	double acum = Entropy(Set);
-	for(int i = 0; i < SubSetV.size();i++){
+
+	for(int i = 0; i < SubSetV.size(); i++) {
 		acum -= ((double)SubSetV[i].first / Set.first) * Entropy(SubSetV[i]);
 	}
 	return acum;
@@ -54,17 +55,17 @@ bool DoNeedSplit(vector<string> index, map<string, vector<string> > dictionary, 
 
 	for (int i = 0; i < dictionary[index[answer_index]].size(); i++) {
 		int count = 0;
-		for(int j = 0; j < samples.size(); j++) {
-			if(samples[j][answer_index] == dictionary[index[answer_index]][i]) {
+		for (int j = 0; j < samples.size(); j++) {
+			if (samples[j][answer_index] == dictionary[index[answer_index]][i]) {
 				count++;
 			}
 		}
 		Set.second[dictionary[index[answer_index]][i]] = count;
 	}
 
-	if(Entropy(Set) != 0.0) {
+	if (Entropy(Set) != 0.0) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
@@ -81,21 +82,21 @@ int ToSplit(vector<string> index, map<string, vector<string> > dictionary, vecto
 
 	for (int i = 0; i < dictionary[index[answer_index]].size(); i++) {
 		int count=0;
-		for(int j = 0; j < samples.size(); j++) {
-			if(samples[j][answer_index] == dictionary[index[answer_index]][i]){
+		for (int j = 0; j < samples.size(); j++) {
+			if (samples[j][answer_index] == dictionary[index[answer_index]][i]) {
 				count++;
 			}
 		}
 		Set.second[dictionary[index[answer_index]][i]] = count;
 	}
 
-	for(int i = 0; i < index.size()-1; i++) {
+	for (int i = 0; i < index.size()-1; i++) {
 		for (int j = 0; j < dictionary[index[i]].size(); j++) {
 			int inst = 0;
 			for (int k = 0; k < dictionary[index[answer_index]].size(); k++) {
 				int count = 0;
 				for (int n = 0; n < samples.size(); n++) {
-					if(samples[n][answer_index] == dictionary[index[answer_index]][k] && samples[n][i] == dictionary[index[i]][j]) {
+					if (samples[n][answer_index] == dictionary[index[answer_index]][k] && samples[n][i] == dictionary[index[i]][j]) {
 						count++;
 					}
 				}
@@ -118,7 +119,7 @@ int ToSplit(vector<string> index, map<string, vector<string> > dictionary, vecto
 
 void Splitting(struct node* Node,vector<string> index, map<string, vector<string> > dictionary, vector<vector<string> > samples, string level) {
 
-	if(DoNeedSplit(index, dictionary, samples)) {
+	if (DoNeedSplit(index, dictionary, samples)) {
 		int index_split = ToSplit(index, dictionary, samples);
 		vector<string> copy_index;
 		vector<vector<string> > branch_samples;
@@ -139,12 +140,12 @@ void Splitting(struct node* Node,vector<string> index, map<string, vector<string
 			copy_index = index;
 
 			copy_index.erase(copy_index.begin()+(index_split));
-			for(int j = 0;j < samples.size(); j++) {
-				if(samples[j][index_split] == dictionary[index[index_split]][i]) {
+			for (int j = 0;j < samples.size(); j++) {
+				if (samples[j][index_split] == dictionary[index[index_split]][i]) {
 					branch_samples.push_back(samples[j]);
 				}
 			}
-			for(int j = 0; j < branch_samples.size() ; j++) {
+			for (int j = 0; j < branch_samples.size() ; j++) {
 				branch_samples[j].erase(branch_samples[j].begin()+index_split);
 			}
 
@@ -182,23 +183,23 @@ class TreeID3 {
 			root->answer = false;
 			root->type = 0;
 
-			for(int i = 0; i < samplesT.size(); i++) {
-				for(int j = 0; j < samplesT[i].length(); j++) {
-					if(samplesT[i][j] == ',') {
+			for (int i = 0; i < samplesT.size(); i++) {
+				for (int j = 0; j < samplesT[i].length(); j++) {
+					if (samplesT[i][j] == ',') {
 						samplesT[i][j] = ' ';
 					}
 				}
 				stringstream extract(samplesT[i]);
 				string aux;
 				vector<string> auxiliar;
-				while(extract >> aux){
+				while (extract >> aux) {
 					auxiliar.push_back(aux);
 				}
 				Samples.push_back(auxiliar);
 				auxiliar.clear();
 			}
 			action = index[index.size()-1];
-			for(int i = 0; i<dictionary[action].size();i++){
+			for (int i = 0; i < dictionary[action].size(); i++) {
 				action_values.push_back(dictionary[action][i]);
 			}
 		}
@@ -219,8 +220,8 @@ int main(int argc, char *argv[]) {
   std::vector<string> samples_trainings;
   std::vector<string> aux_vector_string;
 
-  while(cin >> devourer) {
-		if(devourer == '%') {
+  while (cin >> devourer) {
+		if (devourer == '%') {
 			getline(cin, eater);
     } else {
 			break;
@@ -233,48 +234,48 @@ int main(int argc, char *argv[]) {
   getline(cin,eater);
 
 	getline(cin,buffer);
-	while(buffer.compare("") != 0) {
+	while (buffer.compare("") != 0) {
 		stringstream extract(buffer);
 	  extract >> recov;
-	  if(recov == "@attribute") {
+	  if (recov == "@attribute") {
 			extract >> recov;
 	    aux = recov;
 	    index_attribute.push_back(aux);
 	    buffer = "";
-	    while(extract >> recov){
+	    while (extract >> recov){
 	    	buffer += recov;
 	    }
 	    for (int i = 0; i < strlen(rm_chars); i++) {
     		buffer.erase (std::remove(buffer.begin(), buffer.end(), rm_chars[i]), buffer.end());
 	    }
 
-			for(int i = 0; i < buffer.length(); i++){
-				if(buffer[i]==',') {
+			for (int i = 0; i < buffer.length(); i++){
+				if (buffer[i]==',') {
 					buffer[i]=' ';
 				}
 			}
 
 			stringstream extract(buffer);
 
-			while(extract >> recov){
+			while (extract >> recov){
 				aux_vector_string.push_back(recov);
 	    }
 
 			dictionary_map[aux]=aux_vector_string;
 
-			while(!aux_vector_string.empty()) {
+			while (!aux_vector_string.empty()) {
 				aux_vector_string.pop_back();
 			}
 		}
 		getline(cin, buffer);
 	}
 
-	while(getline(cin, buffer)) {
+	while (getline(cin, buffer)) {
 		stringstream extract(buffer);
 		extract >> recov;
-		if(recov == "@data") {
-			while(getline(cin, buffer)) {
-				if (buffer.find('%') != std::string::npos){
+		if (recov == "@data") {
+			while (getline(cin, buffer)) {
+				if (buffer.find('%') != std::string::npos) {
 					continue;
 				} else {
 					samples_trainings.push_back(buffer);
